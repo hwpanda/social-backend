@@ -38,16 +38,16 @@ keyrings.alt==3.0
 kombu==5.1.0
 
 mysqlclient==2.0.3
-netifaces==0.10.4
+netifaces
 PAM
-prompt-toolkit==3.0.31
-pyasn1==0.4.2
-pyasn1-modules==0.2.1
-pycrypto==2.6.1
+prompt-toolkit
+pyasn1
+pyasn1-modules
+pycrypto
 PyGObject
 pyOpenSSL
 pyserial
-python-apt==0.7.8
+
 python-dateutil
 python-debian
 python-memcached
@@ -64,10 +64,10 @@ six
 sqlparse
 ssh-import-id
 swapper
-systemd-python
-Twisted
+
+
 typing_extensions
-ufw
+
 urllib3
 vine
 wcwidth
