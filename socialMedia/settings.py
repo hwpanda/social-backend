@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-502rl&43^3n)#z%q*t)e!!r!440(n3q&w7kb$ov1yb%heh!!77
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '192.168.33.10', 'localhost']
-
+INTERNAL_IPS = ['127.0.0.1']
 
 # Application definition
 
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # third party packages
     'rest_framework',
+    "debug_toolbar",
 
     # project apps
     'accounts',
@@ -66,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'socialMedia.urls'
