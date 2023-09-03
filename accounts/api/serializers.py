@@ -8,7 +8,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('username', 'email')
 
 
+class UserSerializerForTweet(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
+
 # For validation
+
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
