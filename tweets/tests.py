@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from datatime import timedelta
+from datetime import timedelta
 from utils.time_helpers import utc_now
+from tweets.models import Tweet
 
 
 class TweetTests(TestCase):
