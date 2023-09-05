@@ -18,7 +18,7 @@ class Tweet(models.Model):
     # new field needs null=True. otherwise, with default=0
     # the entire table needs to be looped over
 
-    class Meta:
+    class Meta:  # composite index
         index_together = (("user", "created_at"), )
         ordering = ("user", "-created_at")
 

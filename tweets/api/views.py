@@ -6,6 +6,7 @@ from tweets.models import Tweet
 
 
 class TweetViewSet(viewsets.GenericViewSet):
+
     serializer_class = TweetSerializerForCreate
     # queryset = Tweet.objects.all()
 
@@ -19,8 +20,13 @@ class TweetViewSet(viewsets.GenericViewSet):
             return Response('missing user_id', status=400)
 
         user_id = request.query_params['user_id']
+
+        # select * from socialMedia_tweets where user_id = xxx
+        # order by created_at desc
         tweets = Tweet.objects.filter(user_id=user_id).order_by('-created_at')
         serializer = TweetSerializer(tweets, many=True)
+
+        # hash, not list
         return Response({'tweets': serializer.data})
 
     def create(self, request):
