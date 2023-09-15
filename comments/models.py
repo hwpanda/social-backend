@@ -15,10 +15,10 @@ class Comment(models.Model):
 
     class Meta:
         # order comments in certain tweets
-        index_together = (('tweet', 'created_at'),)
+        index_together = (('tweet', 'created_at'), )
 
     def __str__(self):
-        return '{} - {} say {} at tweet {}'.format(
+        return '{} - {} says at tweet {}'.format(
             self.created_at,
             self.user,
             self.content,

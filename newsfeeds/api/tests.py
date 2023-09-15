@@ -39,7 +39,8 @@ class NewsFeedApiTests(TestCase):
 
         response = self.user1_client.get(NEWSFEED_URL)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data["results"]), 0)
+        # print('response.data:', response.data)
+        self.assertEqual(len(response.data['results']), 0)
 
         self.user1_client.post(POST_TWEETS_URL, {'content': "Hello World"})
         response = self.user1_client.get(NEWSFEED_URL)

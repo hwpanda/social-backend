@@ -28,7 +28,7 @@ class FriendshipViewSet(viewsets.GenericViewSet):
             to_user_id=pk).order_by("-created_at")
         serializer = FollowerSerializer(friendships, many=True)
         return Response(
-            {'followers': serializer.data},
+            {'results': serializer.data},
             status=status.HTTP_200_OK
         )
 
@@ -39,7 +39,7 @@ class FriendshipViewSet(viewsets.GenericViewSet):
             from_user_id=pk).order_by("-created_at")
         serializer = FollowingSerializer(friendships, many=True)
         return Response(
-            {'following': serializer.data},
+            {'results': serializer.data},
             status=status.HTTP_200_OK
         )
 

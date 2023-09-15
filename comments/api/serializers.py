@@ -27,12 +27,12 @@ class CommentSerializerForCreate(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('content', 'tweet_id', 'user_id',)
+        fields = ('content', 'tweet_id', 'user_id')
 
     def validate(self, data):
         tweet_id = data['tweet_id']
         if not Tweet.objects.filter(id=tweet_id).exists():
-            raise ValidationError({'message': 'tweet does not exist.'})
+            raise ValidationError({'message': 'tweet does not exist'})
         # must return validated data
         return data
 

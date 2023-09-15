@@ -1,13 +1,13 @@
 from rest_framework import viewsets, status
-from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from comments.models import Comment
+from comments.api.permissions import IsObjectOwner
 from comments.api.serializers import (
     CommentSerializer,
     CommentSerializerForCreate,
     CommentSerializerForUpdate,
 )
-from comments.api.permissions import IsObjectOwner
 
 
 class CommentViewSet(viewsets.GenericViewSet):
@@ -17,6 +17,7 @@ class CommentViewSet(viewsets.GenericViewSet):
 
     serializer_class = CommentSerializerForCreate
     queryset = Comment.objects.all()
+    filterset_fields = ('tweet_id',)
 
     def get_permissions(self):
         if self.action == 'create':
@@ -25,6 +26,23 @@ class CommentViewSet(viewsets.GenericViewSet):
             return [IsAuthenticated(), IsObjectOwner()]
         return [AllowAny()]
 
+    def list(self, request, *args, **kwargs):
+        if 'tweet_id' not in request.query_params:
+            return Response(
+                {
+                    'message': 'missing tweet_id in request',
+                    'success': False,
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        queryset = self.get_object()
+        comments = self.filter_queryset(queryset).order_by('created_at')
+        serializer = CommentSerializer(comments, many=True)
+        return Response(
+            {'comments': serializer.data},
+            status=status.HTTP_200_OK,
+        )
+
     def create(self, request, *args, **kwargs):
         data = {
             'user_id': request.user.id,
@@ -32,13 +50,11 @@ class CommentViewSet(viewsets.GenericViewSet):
             'content': request.data.get('content'),
         }
 
-        serializer = CommentSerializerForCreate(
-            data=data,
-        )
+        serializer = CommentSerializerForCreate(data=data)
         if not serializer.is_valid():
             return Response({
-                "message": "Please check input",
-                "errors": serializer.errors,
+                'message': 'Please check input',
+                'errors': serializer.errors,
             }, status=status.HTTP_400_BAD_REQUEST)
 
         comment = serializer.save()
@@ -50,15 +66,16 @@ class CommentViewSet(viewsets.GenericViewSet):
 
     def update(self, request, *args, **kwargs):
         # get_object is function of DRF, will raise 404 error when not found
-        comment = self.get_object()
         serializer = CommentSerializerForUpdate(
-            instance=comment,
-            data=request.data
+            instance=self.get_object(),
+            data=request.data,
         )
         if not serializer.is_valid():
-            raise Response({
-                'message': 'Please check input'
+            return Response({
+                'message': 'Please check input',
+                'errors': serializer.errors,
             }, status=status.HTTP_400_BAD_REQUEST)
+
         # save() will trigger update method in serializer
         # it check instance input to decide whether create or update
         comment = serializer.save()

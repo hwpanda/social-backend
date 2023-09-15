@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # third party packages
     'rest_framework',
     "debug_toolbar",
+    'django_filters',
 
     # project apps
     'accounts',
@@ -147,4 +148,9 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+try:
+    from .local_settings import *
+except:
+    pass
