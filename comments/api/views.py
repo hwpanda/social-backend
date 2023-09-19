@@ -8,6 +8,7 @@ from comments.api.serializers import (
     CommentSerializerForCreate,
     CommentSerializerForUpdate,
 )
+from utils.decorators import required_params
 
 
 class CommentViewSet(viewsets.GenericViewSet):
@@ -26,18 +27,26 @@ class CommentViewSet(viewsets.GenericViewSet):
             return [IsAuthenticated(), IsObjectOwner()]
         return [AllowAny()]
 
+    @required_params(params=['tweet_id'])
     def list(self, request, *args, **kwargs):
+        """
         if 'tweet_id' not in request.query_params:
             return Response(
                 {
                     'message': 'missing tweet_id in request',
                     'success': False,
                 },
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST,
             )
-        queryset = self.get_object()
-        comments = self.filter_queryset(queryset).order_by('created_at')
-        serializer = CommentSerializer(comments, many=True)
+        """
+        queryset = self.get_queryset()
+        comments = self.filter_queryset(queryset).prefetch_related(
+            'user').order_by('created_at')
+        serializer = CommentSerializer(
+            comments,
+            context={'request': request},
+            many=True,
+        )
         return Response(
             {'comments': serializer.data},
             status=status.HTTP_200_OK,
@@ -60,8 +69,8 @@ class CommentViewSet(viewsets.GenericViewSet):
         comment = serializer.save()
 
         return Response(
-            CommentSerializer(comment).data,
-            status=status.HTTP_201_CREATED
+            CommentSerializer(comment, context={'request': request}).data,
+            status=status.HTTP_201_CREATED,
         )
 
     def update(self, request, *args, **kwargs):
@@ -80,8 +89,8 @@ class CommentViewSet(viewsets.GenericViewSet):
         # it check instance input to decide whether create or update
         comment = serializer.save()
         return Response(
-            CommentSerializer(comment).data,
-            status=status.HTTP_200_OK
+            CommentSerializer(comment, context={'request': request}).data,
+            status=status.HTTP_200_OK,
         )
 
     # delete
