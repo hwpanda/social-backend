@@ -22,6 +22,7 @@ class TweetViewSet(viewsets.GenericViewSet,
     def retrieve(self, request, *args, **kwargs):
         # todo: with_all_comments
         # todo: with_preview_comments
+
         tweet = self.get_object()
         return Response(TweetSerializerWithComments(tweet).data)
 
