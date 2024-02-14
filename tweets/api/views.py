@@ -28,7 +28,8 @@ class TweetViewSet(viewsets.GenericViewSet):
         serializer = TweetSerializer(tweets, many=True)
 
         # hash, not list
-        return Response({'tweets': serializer.data})
+        # return Response({'tweets': serializer.data})
+        return Response({'results': serializer.data})
 
     def create(self, request):
         # default current user
