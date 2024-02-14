@@ -20,6 +20,9 @@ class TweetViewSet(viewsets.GenericViewSet,
         return [IsAuthenticated()]
 
     def retrieve(self, request, *args, **kwargs):
+        # todo: with_all_comments
+        # todo: with_preview_comments
+
         tweet = self.get_object()
         return Response(TweetSerializerWithComments(tweet).data)
 
@@ -60,4 +63,4 @@ class TweetViewSet(viewsets.GenericViewSet,
 
         tweet = serializer.save()
         NewsFeedService.fanout_to_followers(tweet)
-        return Response(TweetSerializer(tweet).data, status=201)
+        return Response(TweetSerializer(tweet, context={'request': request}).data, status=201)
